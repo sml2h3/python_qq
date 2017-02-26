@@ -53,7 +53,7 @@ class Login(object):
                 jtext = json.loads(rtext.text)
             except ValueError as e:
                 self.logger.error('二维码解析返回不正常')
-                exit()
+                return {'result':'-1','reason':'二维码解析返回不正常'}
             self.logger.info('请扫描屏幕中的二维码')
             url = jtext['jiema']
             #将二维码打印到控制台
@@ -74,7 +74,7 @@ class Login(object):
                     if k == 0:
                         self.logger.info('二维码已经失效')
                         k = k + 1
-                        exit()
+                        return {'result': '-1', 'reason': '二维码已经失效'}
                 if '认证中' in result.text:
                     if j == 0:
                         self.logger.info('二维码已被扫描，正在认证中')
@@ -107,15 +107,17 @@ class Login(object):
             }
             result = requests.post(self.login2, data=data, cookies=user3_cookies, headers=headers)
             jresult = json.loads(result.text)
-            if jresult['retcode'] == '0':
+            if jresult['retcode'] == 0:
                 self.logger.info('登录成功')
+                uin = jresult["result"]["uin"]
+                return {'result': '0', 'reason': '登录成功', 'cookies':user3_cookies, 'psessionid': jresult['result']['psessionid'], 'vfwebqq': vfwebqq, 'uin':uin}
             else:
                 self.logger.info('登录失败')
-                exit()
+                return {'result': '-2', 'reason': '登录失败'}
 
         else:
             self.logger.error('解码发生错误,系统即将退出')
-            exit()
+            return {'result': '-1', 'reason': '解码发生错误,系统即将退出'}
 
 if __name__ == '__main__':
     Login().run()
