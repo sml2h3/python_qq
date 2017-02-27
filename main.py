@@ -6,6 +6,7 @@ from Logger.logger import Logger
 from Login.Login import Login
 from Heart.Heart import Heart
 from Friends.Friends import Friends
+from Group.Group import Group
 import threading
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -36,8 +37,11 @@ class ControlCenter(object):
             cookies = json.dumps(login_result['cookies'])
             heart_thread = threading.Thread(target=self._heart, args=(cookies, login_result['psessionid']))
             getfriend_thread = threading.Thread(target=self._friend, args=(cookies, login_result['uin'], login_result['vfwebqq']))
+            getgroup_thread = threading.Thread(target=self._group,
+                                                args=(cookies, login_result['uin'], login_result['vfwebqq']))
             heart_thread.start()
             getfriend_thread.start()
+            getgroup_thread.start()
         else:
             self.logger.error(login_result['reason'])
 
@@ -50,6 +54,9 @@ class ControlCenter(object):
 
     def _friend(self, cookies, uin, vfwebqq):
         Friends(cookies, uin, vfwebqq)
+
+    def _group(self, cookies, uin, vfwebqq):
+        Group(cookies, uin, vfwebqq)
 
 
 if __name__ == '__main__':

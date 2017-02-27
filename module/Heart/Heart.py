@@ -36,6 +36,5 @@ class Heart(object):
             if jresult['retcode'] != 0:
                 print self.cookies
             self.logger.info(result.text)
-        else:
-            self.logger.info('已经掉线')
+
 
