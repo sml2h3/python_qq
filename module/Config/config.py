@@ -1,3 +1,7 @@
+#coding = utf-8
+import os
+import sys
+
 DB_CONFIG = {
-    'SQLITE': './data/proxy.db'
+    'SQLITE': './module/data/smart.db'
 }

@@ -25,7 +25,7 @@ class Heart(object):
         self.logger = Logger('Heart')
         while True:
             self.poll()
-            time.sleep(1)
+            time.sleep(1.5)
 
 
     def poll(self):
@@ -33,6 +33,8 @@ class Heart(object):
         if result.status_code == 200:
             jresult = json.loads(result.text)
             # if jresult['retcode'] != 0:
+            if jresult['retcode'] != 0:
+                print self.cookies
             self.logger.info(result.text)
         else:
             self.logger.info('已经掉线')

@@ -28,6 +28,7 @@ class ControlCenter(object):
             if command == '1':
                 flag = False
                 self._run()
+
     def _run(self):
         login_result = self._login()
         if login_result['result'] == '0':
