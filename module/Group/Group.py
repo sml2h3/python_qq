@@ -35,8 +35,8 @@ class Group(object):
     def _getGroup(self):
         self.logger.info('获取群组列表')
         result = requests.post(self.target, cookies=self.cookies, headers=self.header, data=self.data)
-        jresult = json.loads(result)
-        if jresult['retcode'] == 100003:
+        jresult = json.loads(result.text)
+        if jresult['retcode'] == 0:
             query = "insert into groups(name,gid,code)values(? , ? , ?)"
             gnamelist = jresult['result']['gnamelist']
             for k in gnamelist:

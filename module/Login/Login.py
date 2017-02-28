@@ -21,6 +21,7 @@ class Login(object):
         self.logger = Logger('Login')
         self.getvfwebqq = "http://s.web2.qq.com/api/getvfwebqq?ptwebqq={ptwebqq}&clientid=53999199&psessionid=&t=1488053293431"
         self.login2 = "http://d1.web2.qq.com/channel/login2"
+        self.online = "http://d1.web2.qq.com/channel/get_online_buddies2?vfwebqq={vfwebqq}&clientid=53999199&psessionid={psessionid}&t=1488268527333"
 
     def run(self):
         #开启一个session会话用来获取基础cookies以及获取二维码及其cookies
@@ -53,7 +54,7 @@ class Login(object):
                 jtext = json.loads(rtext.text)
             except ValueError as e:
                 self.logger.error('二维码解析返回不正常')
-                return {'result':'-1','reason':'二维码解析返回不正常'}
+                return {'result':'-1','reason': '二维码解析返回不正常'}
             self.logger.info('请扫描屏幕中的二维码')
             url = jtext['jiema']
             #将二维码打印到控制台
@@ -110,6 +111,11 @@ class Login(object):
             if jresult['retcode'] == 0:
                 self.logger.info('登录成功')
                 uin = jresult["result"]["uin"]
+                headers = {
+                    'Host':'d1.web2.qq.com',
+                    'Referer':'http://d1.web2.qq.com/proxy.html?v=20151105001&callback=1&id=2'''
+                }
+                requests.get(self.online.replace('{vfwebqq}', vfwebqq).replace('{psessionid}', jresult['result']['psessionid']), cookies=user3_cookies, headers=headers)
                 return {'result': '0', 'reason': '登录成功', 'cookies':user3_cookies, 'psessionid': jresult['result']['psessionid'], 'vfwebqq': vfwebqq, 'uin':uin}
             else:
                 self.logger.info('登录失败')
